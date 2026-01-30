@@ -40,7 +40,7 @@ const eliminar = async (id) => {
 
 // Facades
 export const consultarTodoFacade = async () => await consultarTodo();
-export const consultarIdFacade = async (id) => await consultarId(id);
+export const  consultarIdFacade = async (id) => await consultarId(id);
 export const guardarFacade = async (body) => await guardar(body);
 export const actualizarFacade = async (id, body) => await actualizar(id, body);
 export const actualizarParcialFacade = async (id, body) => await actualizarParcial(id, body);

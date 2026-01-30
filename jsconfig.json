@@ -8,6 +8,7 @@
       "@/*": [
         "src/*"
       ]
+      // Se eliminó AboutView.vue, asegúrate de que no haya referencias aquí
     },
     "lib": [
       "esnext",

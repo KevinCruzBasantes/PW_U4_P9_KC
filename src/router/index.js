@@ -1,24 +1,37 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
+ 
   {
   path: '/guardar',
     name: 'guardar',
     component: () => import(/* webpackChunkName: "guardar" */ '../views/GuardarView.vue')
+  },
+  {
+    path: '/mostrarTodo',
+    name: 'mostrarTodo',
+    component: () => import(/* webpackChunkName: "mostrarTodo" */ '../views/MostrarTodosView.vue')
+  },
+  {
+    path: '/buscarId',
+    name: 'buscarId',
+    component: () => import(/* webpackChunkName: "buscarId" */ '../views/BuscarIdView.vue')
+  },
+  {
+    path: '/actualizar',
+    name: 'actualizar',
+    component: () => import(/* webpackChunkName: "actualizar" */ '../views/ActualizarView.vue')
+  },
+  {
+    path: '/actualizarParcial',
+    name: 'actualizarParcial',
+    component: () => import(/* webpackChunkName: "actualizarParcial" */ '../views/ActualizarParcialView.vue')
+  },
+  {
+    path: '/eliminar',
+    name: 'eliminar',
+    component: () => import(/* webpackChunkName: "eliminar" */ '../views/EliminarView.vue')
   }
 ]
 
