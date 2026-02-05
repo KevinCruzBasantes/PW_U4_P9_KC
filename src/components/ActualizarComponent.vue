@@ -64,6 +64,7 @@ import {
   actualizarFacade
 } from "../clients/MatriculaClient.js";
 
+
 export default {
 
   data() {
@@ -149,7 +150,8 @@ export default {
         this.mensaje = "Error al actualizar";
         this.exito = false;
       }
-    }
+    },
+
   }
 };
 </script>
