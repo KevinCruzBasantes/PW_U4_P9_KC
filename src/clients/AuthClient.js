@@ -18,7 +18,7 @@ const obtenerToken = async () => {
         const response = await axios.get(URL_AUTH, {
             params: {
                 username: 'admin',
-                password: 'admin123'
+                password: '123'
             }
         });
 
