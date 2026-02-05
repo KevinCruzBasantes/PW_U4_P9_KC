@@ -57,22 +57,33 @@
 
 <script>
 import { consultarIdFacade } from "../clients/MatriculaClient.js";
-
+import { obtenerTokenFacade } from "../clients/AuthClient.js";
 export default {
 
   data() {
     return {
       idEstudiante: "",
       estudiante: null,
-      mensaje: ""
+      mensaje: "",
+      token:null,
     };
+  },
+
+  async mounted() {
+    // Apenas se carga el componente, obtenemos el token automáticamente
+    try {
+      this.token = await obtenerTokenFacade();
+      console.log("Autenticación automática exitosa");
+    } catch (error) {
+      this.mensaje = "Error de autenticación inicial";
+    }
   },
 
   methods: {
 
     async consultarPorId() {
-
-      if (!this.idEstudiante) {
+      if(this.token){
+        if (!this.idEstudiante) {
         this.mensaje = "Ingrese un ID primero";
         return;
       }
@@ -80,7 +91,7 @@ export default {
       try {
 
         this.estudiante =
-          await consultarIdFacade(this.idEstudiante);
+          await consultarIdFacade(this.idEstudiante, this.token);
 
         this.mensaje = "";
 
@@ -91,6 +102,8 @@ export default {
         this.estudiante = null;
         this.mensaje = "Estudiante no encontrado";
       }
+      }
+      
     },
 
     formatearFecha(fecha) {

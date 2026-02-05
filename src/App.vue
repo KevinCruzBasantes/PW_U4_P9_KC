@@ -6,9 +6,7 @@
     <router-link to="/actualizar">Actualizar</router-link> |
     <router-link to="/actualizarParcial">ActualizarParcial</router-link> |
     <router-link to="/eliminar">Eliminar</router-link>
-    <div style="margin-top: 10px;">
-      <small style="color: #42b983; font-weight: bold;">Token Configurado</small>
-    </div>
+   
   </nav>
   <router-view />
 </template>

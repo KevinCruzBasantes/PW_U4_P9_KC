@@ -36,6 +36,7 @@
 
 <script>
 import { guardarFacade } from "../clients/MatriculaClient.js";
+import { obtenerTokenFacade } from "../clients/AuthClient.js";
 
 export default {
 
@@ -48,10 +49,20 @@ export default {
       genero: "",
 
       mensaje: "",
-      exito: false
+      exito: false,
+      token:null,
     };
   },
-
+  async mounted() {
+    // Apenas se carga el componente, obtenemos el token automáticamente
+    try {
+      this.token = await obtenerTokenFacade();
+      console.log("Autenticación automática exitosa");
+    } catch (error) {
+      this.mensaje = "Error de autenticación inicial";
+      this.exito = false;
+    }
+  },
   methods: {
 
     async guardarEstudiante() {
@@ -64,9 +75,10 @@ export default {
         genero: this.genero,
       };
 
-      try {
+      if(this.token){
+        try {
 
-        await guardarFacade(estudiante);
+        await guardarFacade(estudiante, this.token);
 
         this.mensaje = " Estudiante creado correctamente";
         this.exito = true;
@@ -83,6 +95,7 @@ export default {
 
         this.mensaje = "Error al crear el estudiante";
         this.exito = false;
+      }
       }
     },
   },

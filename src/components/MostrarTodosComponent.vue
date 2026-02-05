@@ -42,29 +42,40 @@
 
 <script>
 import { consultarTodoFacade } from "../clients/MatriculaClient.js";
-
+import { obtenerTokenFacade } from "../clients/AuthClient.js";
 export default {
 
   data() {
     return {
-      estudiantes: []
+      estudiantes: [],
+      token:null,
     };
   },
 
-  mounted() {
-    this.mostrarTodosEstudiantes();
+  async mounted() {
+    // Apenas se carga el componente, obtenemos el token automáticamente
+    try {
+      this.token = await obtenerTokenFacade();
+      console.log("Autenticación automática exitosa");
+      await this.mostrarTodosEstudiantes();
+    } catch (error) {
+      console.error("Error de autenticación inicial");
+    }
   },
 
   methods: {
 
     async mostrarTodosEstudiantes() {
-      try {
+      if(this.token){
+        try {
 
-        this.estudiantes = await consultarTodoFacade();
+        this.estudiantes = await consultarTodoFacade(this.token);
 
       } catch (error) {
 
         console.error(error);
+
+      }
 
       }
     },

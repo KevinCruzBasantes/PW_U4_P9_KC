@@ -29,6 +29,8 @@
 
 <script>
 import { actualizarParcialFacade } from "../clients/MatriculaClient";
+import { obtenerTokenFacade } from "../clients/AuthClient.js"; 
+
 
 export default {
   data() {
@@ -42,12 +44,23 @@ export default {
 
       mensaje: "",
       exito: false,
+      token:null,
     };
   },
-
+  async mounted() {
+    // Apenas se carga el componente, obtenemos el token automáticamente
+    try {
+      this.token = await obtenerTokenFacade();
+      console.log("Autenticación automática exitosa");
+    } catch (error) {
+      this.mensaje = "Error de autenticación inicial";
+      this.exito = false;
+    }
+  },
   methods: {
     async actualizarParcial() {
-      try {
+      if(this.token){
+        try {
         const body = {};
 
         if (this.nombre) body.nombre = this.nombre;
@@ -61,7 +74,7 @@ export default {
           return;
         }
 
-        await actualizarParcialFacade(this.id, body);
+        await actualizarParcialFacade(this.id, body, this.token);
 
         this.mensaje = "Actualizado correctamente ";
         this.exito = true;
@@ -76,6 +89,8 @@ export default {
         this.mensaje = "Error al actualizar ";
         this.exito = false;
       }
+      }
+      
     },
   },
 };

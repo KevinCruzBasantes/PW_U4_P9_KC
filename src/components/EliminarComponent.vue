@@ -66,6 +66,7 @@
 
 <script>
 import { eliminarFacade } from "../clients/MatriculaClient";
+import { obtenerTokenFacade } from "../clients/AuthClient.js";
 
 export default {
 
@@ -77,8 +78,19 @@ export default {
       confirmar: false,
 
       mensaje: "",
-      exito: false
+      exito: false,
+      token:null
     };
+  },
+
+  async mounted() {
+    // Apenas se carga el componente, obtenemos el token automáticamente
+    try {
+      this.token = await obtenerTokenFacade();
+      console.log("Autenticación automática exitosa");
+    } catch (error) {
+      this.mensaje = "Error de autenticación inicial";
+    }
   },
 
   methods: {
@@ -93,24 +105,19 @@ export default {
 
     async confirmarEliminar() {
 
-      try {
-
-        await eliminarFacade(this.id);
-
-        this.mensaje = "Estudiante eliminado correctamente ";
-        this.exito = true;
-
-        this.id = "";
-        this.confirmar = false;
-
-      } catch (error) {
-
-        console.error(error);
-
-        this.mensaje = "Error al eliminar el estudiante ";
-        this.exito = false;
-
-        this.confirmar = false;
+     if(this.token){
+        try {
+          await eliminarFacade(this.id, this.token);
+          this.mensaje = "Estudiante eliminado correctamente ";
+          this.exito = true;
+          this.id = "";
+          this.confirmar = false;
+        } catch (error) {
+          console.error(error);
+          this.mensaje = "Error al eliminar el estudiante ";
+          this.exito = false;
+          this.confirmar = false;
+        }
       }
     },
 

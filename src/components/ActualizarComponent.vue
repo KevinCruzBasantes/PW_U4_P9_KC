@@ -64,7 +64,7 @@ import {
   actualizarFacade
 } from "../clients/MatriculaClient.js";
 
-
+import { obtenerTokenFacade } from "../clients/AuthClient.js"; // Importamos el nuevo cliente
 export default {
 
   data() {
@@ -81,73 +81,61 @@ export default {
       estudianteCargado: false,
 
       mensaje: "",
-      exito: false
+      exito: false,
+      token: null,
     };
   },
-
+  async mounted() {
+    // Apenas se carga el componente, obtenemos el token automáticamente
+    try {
+      this.token = await obtenerTokenFacade();
+      console.log("Autenticación automática exitosa");
+    } catch (error) {
+      this.mensaje = "Error de autenticación inicial";
+      this.exito = false;
+    }
+  },
   methods: {
 
     async buscar() {
-
-      if (!this.id) {
-        this.mensaje = "Ingrese un ID";
-        this.exito = false;
+      if (!this.id || !this.token) { // Validamos que tengamos el token
+        this.mensaje = "Falta ID o Autenticación";
         return;
       }
 
       try {
-
-        const e = await consultarIdFacade(this.id);
+        // Pasamos el token guardado en data()
+        const e = await consultarIdFacade(this.id, this.token);
 
         this.nombre = e.nombre;
         this.apellido = e.apellido;
-
-        this.fechaNacimiento =
-          e.fechaNacimiento.substring(0, 16);
-
+        this.fechaNacimiento = e.fechaNacimiento.substring(0, 16);
         this.provincia = e.provincia;
         this.genero = e.genero;
-
         this.estudianteCargado = true;
-
         this.mensaje = "";
-
       } catch (error) {
-
-        console.error(error);
-
-        this.mensaje = "No encontrado";
-        this.exito = false;
-
+        this.mensaje = "Estudiante no encontrado";
         this.estudianteCargado = false;
       }
     },
 
     async actualizar() {
-
       const body = {
-
         nombre: this.nombre,
         apellido: this.apellido,
-
         fechaNacimiento: this.fechaNacimiento,
-
         provincia: this.provincia,
         genero: this.genero
       };
 
       try {
-
-        await actualizarFacade(this.id, body);
-
+        // Pasamos el token guardado en data()
+        await actualizarFacade(this.id, body, this.token);
         this.mensaje = "Actualizado correctamente";
         this.exito = true;
-
       } catch (error) {
-
-        console.error(error);
-
-        this.mensaje = "Error al actualizar";
+        this.mensaje = "Error al actualizar (Token expirado o inválido)";
         this.exito = false;
       }
     },

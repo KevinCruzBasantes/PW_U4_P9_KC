@@ -1,23 +1,19 @@
 import axios from "axios";
 
-// Nueva URL de acceso directo
-const URL_LOGIN = "http://localhost:8082/oauth/login";
+const URL_AUTH = "http://localhost:8082/auth/token";
 
 export const obtenerTokenFacade = async () => {
-  const params = new URLSearchParams();
-  // Enviamos credenciales directamente
-  params.append('username', 'admin'); 
-  params.append('password', '123');
-
   try {
-    const response = await axios.post(URL_LOGIN, params, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    const response = await axios.get(URL_AUTH, {
+      params: {
+        username: 'admin',
+        password: 'admin123'
+      }
     });
     
-    // Retornamos el access_token que ahora viene directamente del login
-    return response.data.access_token;
+    return response.data.accessToken;
   } catch (error) {
-    console.error("Error en la autenticación directa:", error);
+    console.error("Error obteniendo el token :", error);
     throw error;
   }
 };
