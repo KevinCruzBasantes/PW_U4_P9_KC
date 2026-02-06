@@ -19,7 +19,8 @@ export default {
   methods: {
     salir() {
       
-        cerrarSesionFacade();
+      cerrarSesionFacade(); // Borra localStorage
+    this.$router.push({ name: 'login' }); // Redirige inmediatamente
       
     }
   }
