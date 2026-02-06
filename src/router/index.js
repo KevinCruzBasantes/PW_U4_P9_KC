@@ -1,9 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import LoginView from "../views/LoginView.vue"
 const routes = [
   {
     path: '/',
     redirect: '/mostrarTodo'
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
   },
   {
     path: '/guardar',
@@ -71,15 +76,24 @@ const router = createRouter({
 //configuracion del guardian, to a donde quiero acceder, 
 // from de que pagina vengo, 
 // next permite decir si le permito ir a la pagina o redireccionar
-router.beforeEach((to, from, next)=>{
-  if(to.meta.requiereAutorizacion){
-    //le envio a una pagina de login
-    console.log("Redirigiendo al login")
-  }else{
-    //le dejo pasar sin autenticacion
-    console.log("Pase libre")
-    next()
+router.beforeEach((to, from, next) => {
+  const estaAutenticado = localStorage.getItem("estaAutenticado") === "true";
+
+  if (to.meta.requiereAutorizacion) {
+    if (estaAutenticado) {
+      next(); 
+    } else {
+      console.log("Acceso denegado: Redirigiendo al login");
+      next({ name: 'login' }); 
+    }
+  } else {
+    if (to.name === 'login' && estaAutenticado) {
+      next({ name: 'mostrarTodo' });
+    } else {
+      console.log("Pase libre a:", to.path);
+      next();
+    }
   }
-})
+});
 
 export default router
